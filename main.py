@@ -1,27 +1,39 @@
 
 import pygame
 
+pygame.init()
+
 # Setup
 LARGURA_TELA = 1280
 ALTURA_TELA = 720
-FPS = 60
+FPS = 30
 rodando = True
+velocidade = 10
+tamanho_quadrado = 40
 
-# Cores 
+# Cores e fonte
 preto = (0, 0, 0)
 vermelho = (255, 0, 0)
 verde = (0, 255, 0)
 azul = (0, 0, 255)
 branco = (255, 255, 255)
+fonte = pygame.font.Font(None, 36)
 
-pygame.init()
+# Função para fim do jogo
+def game_over():
+    texto = fonte.render("GAME OVER", True, vermelho)
+    tela.blit(texto, (LARGURA_TELA/2, ALTURA_TELA/2))
+    pygame.display.flip()
+    pygame.time.wait(4000)
+    return False
+    
+
 
 tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("Jogo da Cobrinha")
 relogio = pygame.time.Clock()
 
 x, y = LARGURA_TELA/2, ALTURA_TELA/2
-velocidade = 5
 
 while rodando:
     
@@ -32,17 +44,38 @@ while rodando:
             rodando = False
 
     teclas = pygame.key.get_pressed()
+    
+    # Mover para esquerda
     if teclas[pygame.K_LEFT]:
         x -= velocidade
+        if x < -1:
+            rodando = game_over()
+    
+    # Mover para direita
     if teclas[pygame.K_RIGHT]:
         x += velocidade
+        if x > LARGURA_TELA-tamanho_quadrado+1:
+            rodando = game_over()
+    
+    # Mover para cima
     if teclas[pygame.K_UP]:
         y -= velocidade
+        if y < -1:
+            rodando = game_over()
+    
+    # Mover para baixo    
     if teclas[pygame.K_DOWN]:
         y += velocidade
+        if y > ALTURA_TELA-tamanho_quadrado+1:
+            rodando = game_over()
+    
+    # Auxiliar
+    if teclas[pygame.K_SPACE]:
+        print(x,y)
+        print(rodando)
 
-    tela.fill((30, 30, 30))
-    pygame.draw.rect(tela, branco, (x, y, 40, 40))
+    tela.fill(preto)
+    pygame.draw.rect(tela, branco, (x, y, tamanho_quadrado, tamanho_quadrado))
     pygame.display.flip()
     relogio.tick(FPS)
 
