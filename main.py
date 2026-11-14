@@ -1,15 +1,19 @@
 
 import pygame
+import random
 
 pygame.init()
 
 # Setup
 LARGURA_TELA = 1280
 ALTURA_TELA = 720
-FPS = 30
+FPS = 120
 rodando = True
 velocidade = 10
 tamanho_quadrado = 40
+x_alimento = random.randint(0,LARGURA_TELA-tamanho_quadrado)
+y_alimento = random.randint(0,ALTURA_TELA-tamanho_quadrado)
+print(x_alimento, y_alimento)
 
 # Cores e fonte
 preto = (0, 0, 0)
@@ -26,6 +30,12 @@ def game_over():
     pygame.display.flip()
     pygame.time.wait(4000)
     return False
+
+# Função para gerar alimento para cobra
+def alimento_cobra(x_alimento, y_alimento):
+    pygame.draw.rect(tela, verde, (x_alimento, y_alimento, tamanho_quadrado/2, tamanho_quadrado/2))
+    pygame.display.flip()
+
     
 
 
@@ -69,6 +79,10 @@ while rodando:
         if y > ALTURA_TELA-tamanho_quadrado+1:
             rodando = game_over()
     
+    # Alimento
+    if teclas[pygame.K_a]:
+        alimento_cobra()
+    
     # Auxiliar
     if teclas[pygame.K_SPACE]:
         print(x,y)
@@ -76,6 +90,7 @@ while rodando:
 
     tela.fill(preto)
     pygame.draw.rect(tela, branco, (x, y, tamanho_quadrado, tamanho_quadrado))
+    alimento_cobra(x_alimento, y_alimento)
     pygame.display.flip()
     relogio.tick(FPS)
 
